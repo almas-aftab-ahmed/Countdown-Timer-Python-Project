@@ -40,15 +40,19 @@ if col2.button("Pause ⏸️"):
 if col3.button("Reset 🔄"):
     st.session_state.running = False
     st.session_state.time_left = total_time
+    st.rerun()
 
 # --- Timer Display ---
-while st.session_state.time_left > 0 and st.session_state.running:
-    mins, secs = divmod(st.session_state.time_left, 60)
-    timer_display = f"{mins:02d}:{secs:02d}"
-    st.markdown(f"<h2 class='timer'>{timer_display}</h2>", unsafe_allow_html=True)
-    time.sleep(1)
-    st.session_state.time_left -= 1
-    st.experimental_rerun()
+timer_placeholder = st.empty()
+
+if st.session_state.running:
+    while st.session_state.time_left > 0 and st.session_state.running:
+        mins, secs = divmod(st.session_state.time_left, 60)
+        timer_display = f"{mins:02d}:{secs:02d}"
+        timer_placeholder.markdown(f"<h2 class='timer'>{timer_display}</h2>", unsafe_allow_html=True)
+        time.sleep(1)
+        st.session_state.time_left -= 1
+        st.rerun()
 
 # --- Time's Up Action ---
 if st.session_state.time_left == 0 and st.session_state.running:
